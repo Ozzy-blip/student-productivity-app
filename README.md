@@ -1,25 +1,20 @@
-# StudyQuest
+const CACHE_NAME = 'studyquest-v1';
+const APP_SHELL = [
+  './',
+  './index.html',
+  './style.css',
+  './app.js',
+  './manifest.webmanifest'
+];
 
-A playful, Duolingo-inspired student productivity app built in Flutter.
+self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
+});
 
-## Features
-- Homework Hub with urgency tags and progress tracking
-- Actions Hub for quick daily operations
-- Habits & Routines tracker
-- Vault for class links, files, and syllabus resources
-- Gamified XP and streak experience
-
-## Run locally
-
-1. Install Flutter.
-2. Run:
-   ```bash
-   flutter pub get
-   flutter run
-   ```
-
-## Project structure
-- `lib/main.dart` - app entry point
-- `lib/theme/app_theme.dart` - design system and theme
-- `lib/data/mock_data.dart` - sample content
-- `lib/screens/home_screen.dart` - main dashboard UI
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      return cachedResponse || fetch(event.request);
+    })
+  );
+});

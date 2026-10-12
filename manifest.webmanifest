@@ -1,0 +1,141 @@
+const homeworkData = [
+  {
+    title: 'Literature Reflection',
+    course: 'English Lit',
+    dueLabel: 'Due Tomorrow',
+    progress: 72,
+    tag: 'Due Tomorrow',
+    color: '#3EB7FF'
+  },
+  {
+    title: 'Biology Lab Report',
+    course: 'Biology',
+    dueLabel: 'Due Friday',
+    progress: 48,
+    tag: 'Needs review',
+    color: '#FFB547'
+  },
+  {
+    title: 'History Timeline',
+    course: 'World History',
+    dueLabel: 'Milestone',
+    progress: 90,
+    tag: 'Story Quest',
+    color: '#3BD48A'
+  }
+];
+
+const actionsData = [
+  { title: 'Email professor', done: true },
+  { title: 'Print syllabus', done: false },
+  { title: 'Pack gym bag', done: false },
+  { title: 'Review lab notes', done: true }
+];
+
+const habitsData = [
+  { title: 'Flashcards', sub: '4/6 reviews', streak: '12d', percent: 70, color: '#3EB7FF' },
+  { title: 'Deep Work', sub: '2h focused', streak: '5d', percent: 82, color: '#8B5CF6' },
+  { title: 'Reading', sub: '24 pages', streak: '8d', percent: 60, color: '#3BD48A' }
+];
+
+const vaultData = [
+  { title: 'Syllabus', subtitle: 'English Lit / PDF', icon: '📄' },
+  { title: 'Drive Folder', subtitle: 'Research project', icon: '🗂️' },
+  { title: 'Lecture Recordings', subtitle: 'Biology 101', icon: '🎧' },
+  { title: 'Class Links', subtitle: 'Canvas + Zoom', icon: '🔗' }
+];
+
+const badgeColorMap = {
+  'Due Tomorrow': '#3EB7FF',
+  'Needs review': '#FFB547',
+  'Story Quest': '#3BD48A'
+};
+
+function renderHomework() {
+  const list = document.getElementById('homeworkList');
+  const template = document.getElementById('taskCardTemplate');
+
+  homeworkData.forEach((task) => {
+    const clone = template.content.cloneNode(true);
+    const card = clone.querySelector('.task-card');
+    const badge = clone.querySelector('.badge');
+    const fill = clone.querySelector('.progress-fill');
+
+    clone.querySelector('.task-title').textContent = task.title;
+    clone.querySelector('.task-course').textContent = task.course;
+    clone.querySelector('.due-label').textContent = task.dueLabel;
+    clone.querySelector('.progress-text').textContent = `${task.progress}%`;
+    badge.textContent = task.tag;
+    badge.style.background = badgeColorMap[task.tag] || '#3EB7FF';
+    fill.style.width = `${task.progress}%`;
+    fill.style.background = `linear-gradient(90deg, ${task.color}, #8B5CF6)`;
+
+    list.appendChild(clone);
+  });
+}
+
+function renderActions() {
+  const list = document.getElementById('actionList');
+  const template = document.getElementById('actionTemplate');
+
+  actionsData.forEach((item) => {
+    const clone = template.content.cloneNode(true);
+    const input = clone.querySelector('input');
+    const label = clone.querySelector('.check-text');
+
+    input.checked = item.done;
+    label.textContent = item.title;
+
+    list.appendChild(clone);
+  });
+}
+
+function renderHabits() {
+  const list = document.getElementById('habitList');
+  const template = document.getElementById('habitTemplate');
+
+  habitsData.forEach((habit) => {
+    const clone = template.content.cloneNode(true);
+    const fill = clone.querySelector('.progress-fill');
+    const burst = clone.querySelector('.habit-burst');
+
+    clone.querySelector('.habit-title').textContent = habit.title;
+    clone.querySelector('.habit-subtitle').textContent = habit.sub;
+    clone.querySelector('.habit-streak').textContent = habit.streak;
+    clone.querySelector('.habit-percent').textContent = `${habit.percent}%`;
+    burst.style.background = `${habit.color}22`;
+    fill.style.width = `${habit.percent}%`;
+    fill.style.background = `linear-gradient(90deg, ${habit.color}, ${habit.color}cc)`;
+
+    list.appendChild(clone);
+  });
+}
+
+function renderVault() {
+  const list = document.getElementById('vaultList');
+  const template = document.getElementById('vaultTemplate');
+
+  vaultData.forEach((item) => {
+    const clone = template.content.cloneNode(true);
+    clone.querySelector('.vault-title').textContent = item.title;
+    clone.querySelector('.vault-subtitle').textContent = item.subtitle;
+    clone.querySelector('.vault-icon').textContent = item.icon;
+    list.appendChild(clone);
+  });
+}
+
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch((err) => {
+        console.warn('Service worker registration failed:', err);
+      });
+    });
+  }
+}
+
+renderHomework();
+renderActions();
+renderHabits();
+renderVault();
+registerServiceWorker();

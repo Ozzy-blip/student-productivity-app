@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3EB7FF" />
+    <meta
+      name="description"
+      content="StudyQuest — a playful student productivity app with homework, routines, actions, and vault resources."
+    />
+    <title>StudyQuest</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%233EB7FF'/%3E%3Cpath d='M19 27.5h26v6H19zm0 11h26v6H19zm8-22h10v6H27z' fill='white'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Student productivity</p>
+          <h1>StudyQuest</h1>
+        </div>
+        <div class="level-pill">LVL 12</div>
+      </header>
+
+      <section class="stats-grid">
+        <article class="stat-card accent-blue">
+          <span class="stat-label">XP</span>
+          <strong id="xpValue">1,280</strong>
+        </article>
+        <article class="stat-card accent-green">
+          <span class="stat-label">Streak</span>
+          <strong>18 days</strong>
+        </article>
+        <article class="stat-card accent-purple">
+          <span class="stat-label">Focus</span>
+          <strong>83%</strong>
+        </article>
+      </section>
+
+      <main class="content-stack">
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Homework Hub</h2>
+            <button class="text-button">View all</button>
+          </div>
+          <div id="homeworkList" class="task-list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Actions Hub</h2>
+            <button class="text-button">Daily</button>
+          </div>
+          <div id="actionList" class="check-list"></div>
+        </section>
+
+        <section class="panel panel-compact">
+          <div class="panel-header">
+            <h2>Habits &amp; Routines</h2>
+            <button class="text-button">7-day</button>
+          </div>
+          <div id="habitList" class="habit-list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Vault</h2>
+            <button class="text-button">Browse</button>
+          </div>
+          <div id="vaultList" class="vault-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="taskCardTemplate">
+      <article class="task-card">
+        <div class="task-row">
+          <div class="task-text">
+            <h3 class="task-title"></h3>
+            <p class="task-course"></p>
+          </div>
+          <span class="badge"></span>
+        </div>
+        <div class="meta-line">
+          <div class="time-pill">
+            <span class="icon">⏱</span>
+            <span class="due-label"></span>
+          </div>
+          <span class="progress-text"></span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+      </article>
+    </template>
+
+    <template id="actionTemplate">
+      <label class="check-item">
+        <input type="checkbox" />
+        <span class="check-box"></span>
+        <span class="check-text"></span>
+      </label>
+    </template>
+
+    <template id="habitTemplate">
+      <article class="habit-card">
+        <div class="habit-toprow">
+          <div>
+            <h3 class="habit-title"></h3>
+            <p class="habit-subtitle"></p>
+          </div>
+          <div class="habit-burst">
+            <span class="habit-streak"></span>
+          </div>
+        </div>
+        <div class="habit-bottomrow">
+          <span class="habit-percent"></span>
+        </div>
+        <div class="progress-bar thin">
+          <div class="progress-fill"></div>
+        </div>
+      </article>
+    </template>
+
+    <template id="vaultTemplate">
+      <article class="vault-item">
+        <div class="vault-icon"></div>
+        <div class="vault-body">
+          <h3 class="vault-title"></h3>
+          <p class="vault-subtitle"></p>
+        </div>
+        <span class="chevron">›</span>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
