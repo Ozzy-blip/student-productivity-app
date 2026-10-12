@@ -1,0 +1,547 @@
+import 'package:flutter/material.dart';
+import 'package:studyquest/data/mock_data.dart';
+import 'package:studyquest/theme/app_theme.dart';
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Scaffold(
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'StudyQuest',
+                              style: textTheme.headlineMedium,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Keep momentum going',
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: AppTheme.muted,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppTheme.primarySoft,
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: const Text(
+                            'LVL 12',
+                            style: TextStyle(
+                              color: AppTheme.primaryDark,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _StatTile(
+                            label: 'XP',
+                            value: '1,280',
+                            accent: AppTheme.primary,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _StatTile(
+                            label: 'Streak',
+                            value: '18 days',
+                            accent: AppTheme.success,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _StatTile(
+                            label: 'Focus',
+                            value: '83%',
+                            accent: AppTheme.purple,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                child: _SectionHeader(
+                  title: 'Homework Hub',
+                  action: 'View all',
+                ),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final task = sampleHomeworkTasks[index];
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(22),
+                        border: Border.all(color: AppTheme.border, width: 1.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.02),
+                            blurRadius: 10,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      task.title,
+                                      style: textTheme.titleLarge?.copyWith(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      task.course,
+                                      style: textTheme.bodyMedium?.copyWith(
+                                        color: AppTheme.muted,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: _tagColor(task.tag),
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
+                                child: Text(
+                                  task.tag,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 18),
+                          Row(
+                            children: [
+                              const Icon(Icons.schedule_rounded, size: 16, color: AppTheme.muted),
+                              const SizedBox(width: 6),
+                              Text(
+                                task.dueLabel,
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: AppTheme.muted,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                '${task.progress}%',
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: AppTheme.text,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(999),
+                            child: LinearProgressIndicator(
+                              value: task.progress / 100,
+                              minHeight: 12,
+                              backgroundColor: AppTheme.border,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                _taskColor(task.accent),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                childCount: sampleHomeworkTasks.length,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 8),
+                child: _SectionHeader(
+                  title: 'Actions Hub',
+                  action: 'Daily',
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: AppTheme.border, width: 1.5),
+                  ),
+                  child: Column(
+                    children: sampleActionItems.map((item) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 22,
+                              height: 22,
+                              decoration: BoxDecoration(
+                                color: item.done ? AppTheme.success : AppTheme.primarySoft,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: item.done
+                                  ? const Icon(
+                                      Icons.check_rounded,
+                                      color: Colors.white,
+                                      size: 14,
+                                    )
+                                  : null,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                item.title,
+                                style: textTheme.bodyLarge?.copyWith(
+                                  decoration: item.done ? TextDecoration.lineThrough : null,
+                                  color: item.done ? AppTheme.muted : AppTheme.text,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 8),
+                child: _SectionHeader(
+                  title: 'Habits & Routines',
+                  action: '7-day',
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 170,
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: sampleHabits.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 12),
+                  itemBuilder: (context, index) {
+                    final habit = sampleHabits[index];
+                    return Container(
+                      width: 180,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: AppTheme.border, width: 1.5),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            habit.title,
+                            style: textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            habit.subtitle,
+                            style: textTheme.bodySmall?.copyWith(color: AppTheme.muted),
+                          ),
+                          const Spacer(),
+                          Row(
+                            children: [
+                              Container(
+                                width: 52,
+                                height: 52,
+                                decoration: BoxDecoration(
+                                  color: _habitColor(habit.color).withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${habit.streak}d',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      color: AppTheme.text,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                '${habit.progress}%',
+                                style: const TextStyle(
+                                  color: AppTheme.text,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(999),
+                            child: LinearProgressIndicator(
+                              value: habit.progress / 100,
+                              minHeight: 8,
+                              backgroundColor: AppTheme.border,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                _habitColor(habit.color),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 8),
+                child: _SectionHeader(
+                  title: 'Vault',
+                  action: 'Browse',
+                ),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final item = sampleVaultItems[index];
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                    child: Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: AppTheme.border, width: 1.5),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: AppTheme.primarySoft,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Center(
+                              child: Text(
+                                item.emoji,
+                                style: const TextStyle(fontSize: 24),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.title,
+                                  style: textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  item.subtitle,
+                                  style: textTheme.bodySmall?.copyWith(
+                                    color: AppTheme.muted,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 16,
+                            color: AppTheme.muted,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                childCount: sampleVaultItems.length,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _taskColor(String color) {
+    switch (color) {
+      case '#3EB7FF':
+        return AppTheme.primary;
+      case '#FFB547':
+        return AppTheme.warning;
+      case '#3BD48A':
+        return AppTheme.success;
+      default:
+        return AppTheme.primary;
+    }
+  }
+
+  Color _tagColor(String tag) {
+    switch (tag) {
+      case 'Due Tomorrow':
+        return AppTheme.primary;
+      case 'Needs review':
+        return AppTheme.warning;
+      case 'Story Quest':
+        return AppTheme.success;
+      default:
+        return AppTheme.primaryDark;
+    }
+  }
+
+  Color _habitColor(String color) {
+    switch (color) {
+      case '#3EB7FF':
+        return AppTheme.primary;
+      case '#8B5CF6':
+        return AppTheme.purple;
+      case '#3BD48A':
+        return AppTheme.success;
+      default:
+        return AppTheme.primary;
+    }
+  }
+}
+
+class _StatTile extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color accent;
+
+  const _StatTile({
+    required this.label,
+    required this.value,
+    required this.accent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppTheme.border, width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: AppTheme.muted,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: accent,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  final String action;
+
+  const _SectionHeader({
+    required this.title,
+    required this.action,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontSize: 23,
+          ),
+        ),
+        Text(
+          action,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: AppTheme.primary,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ],
+    );
+  }
+}
